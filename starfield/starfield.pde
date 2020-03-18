@@ -4,6 +4,7 @@ int NUM_STARS = 200;
 int MAX_TRAIL = 10;
 float MAX_DIST = 100;
 float STARS_WIDTH = 30000;
+float STARS_WIDTH_2 = STARS_WIDTH / 2;
 float MIN_SPEED = 0.2;
 float MAX_SPEED = 2.0;
 float SPEED_INCREASE = 0.01;
@@ -13,6 +14,8 @@ float speed = MIN_SPEED;
 
 int screenWidth_2 = 0;
 int screenHeight_2 = 0;
+
+boolean running = false;
 
 /*
  * Helper functions
@@ -32,8 +35,6 @@ void _update() {
   }
 
   speed = constrain(speed, MIN_SPEED, MAX_SPEED);
-  screenWidth_2 = width / 2;
-  screenHeight_2 = height / 2;
 
   for (int i = 0; i < NUM_STARS; i++) {
     Star star = stars.get(i);
@@ -52,6 +53,7 @@ void setup() {
   fullScreen();
   pixelDensity(1);
   noCursor();
+  noLoop();
 
   for (int i = 0; i < NUM_STARS; i++) {
     Star star = new Star();
@@ -59,6 +61,11 @@ void setup() {
     star.z = random(0, MAX_DIST);
     stars.add(star);
   }
+
+  screenWidth_2 = width / 2;
+  screenHeight_2 = height / 2;
+
+  running = false;
 }
 
 void draw() {
@@ -93,8 +100,22 @@ void draw() {
 
   stroke(128);
   fill(255);
+  textAlign(LEFT);
   text("Press CTRL for warp", 10, 10);
   text("FPS: " + frameRate, 10, 30);
+
+  if (!running) {
+    textAlign(CENTER);
+    text("Click to start", screenWidth_2, screenHeight_2);
+    noLoop();
+  }
+}
+
+void mouseClicked() {
+  running = !running;
+  if (running) {
+    loop();
+  }
 }
 
 /*
