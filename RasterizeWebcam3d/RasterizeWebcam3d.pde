@@ -6,34 +6,34 @@
 import com.hamoid.*;
 import processing.video.*;
 
-boolean ENABLE_VIDEO = false;
+boolean ENABLE_VIDEO_EXPORT = true;
 int CAPTURE_WIDTH = 160;
 int CAPTURE_HEIGTH = 120;
-float ROT_Y = PI / 317;
-float ROT_THETA = PI / 93;
-
-Capture video;
-boolean recording = false;
+// amount of rotation per frame
+float ROT_Y = PI / 300;
 
 float rotY = 0;
-float theta = 0;
-float zAmplitude = 200;
 float zSpread = 0;
+float maxZSpread = 1000;
 
+// webcam input
+Capture video;
+// video output
+boolean recording = false;
 VideoExport videoExport;
 
 void setup() {
   size(640, 480, P3D);
-  
+
   frameRate(30);
 
-  if (ENABLE_VIDEO) {
+  if (ENABLE_VIDEO_EXPORT) {
     videoExport = new VideoExport(this, "RasterizeWebcam3d.mp4");
     videoExport.setDebugging(false);
     videoExport.setFrameRate(30);
     videoExport.startMovie();
   }
-  
+
   String[] cameras = Capture.list();
 
   if (cameras.length == 0) {
@@ -49,14 +49,9 @@ void captureEvent(Capture video) {
   video.read();
 }
 
-void _update() {
-  rotY += ROT_Y;
-  theta += ROT_THETA;
-  zSpread = sin(theta) * zAmplitude;
-}
-
 void draw() {
-  _update();
+  rotY += ROT_Y;
+  zSpread = map(mouseX, 0, width, maxZSpread, -maxZSpread);
 
   background(#111111);
 
@@ -101,7 +96,7 @@ void draw() {
   stroke(128);
   fill(255);
 
-  if (ENABLE_VIDEO && recording) {
+  if (ENABLE_VIDEO_EXPORT && recording) {
     videoExport.saveFrame();
   }
 }
@@ -111,7 +106,7 @@ void keyPressed() {
     recording = !recording;
   }
   if (key == 'q' || keyCode == ESC) {
-    if (ENABLE_VIDEO) {
+    if (ENABLE_VIDEO_EXPORT) {
       videoExport.endMovie();
     }
     exit();
