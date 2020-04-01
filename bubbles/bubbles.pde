@@ -38,7 +38,7 @@ Particle newParticle(int i, float maxZ) {
 }
 
 void setupPalette() {
-  background = #354B65;
+  background = #000011;
   palette = new color[10];
   palette[0] = #0336EF;
   palette[1] = #3AB5FF;
@@ -88,9 +88,9 @@ void draw() {
       resetParticle(particle);
     }
 
-    stroke(particle.col, 128);
-    strokeWeight(map(particle.position.z, 1, partMaxZ, 1, 5));
-    fill(particle.col, 64);
+    stroke(particle.col, 100);
+    strokeWeight(1);
+    fill(particle.col, 60);
     circle(particle.position.x, particle.position.y, particle.position.z);
   }
 }
